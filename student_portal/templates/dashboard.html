@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<p class="mt-2 text-[#14B8A6] text-lg font-medium">
+  Your Batch: <strong class="text-[#1E3A8A]">{{ batch.name }}</strong>
+</p>
+
+<h2 class="text-4xl font-extrabold mb-6 text-[#1E3A8A]">
+  Welcome, {{ request.user.username }} 🎉
+</h2>
+
+<p class="text-gray-600 mb-10 text-lg">
+  You are now logged in. This is your student dashboard.
+</p>
+
+<h3 class="text-3xl font-semibold mb-6 text-[#14B8A6]">
+  Lectures for Your Batch
+</h3>
+
+<ul class="space-y-8">
+  {% for lec in lectures %}
+  <li class="border border-[#1E3A8A] p-6 rounded-lg shadow-md bg-white hover:bg-[#E0F2F1] transition-colors duration-300">
+    <h4 class="text-2xl font-bold text-[#1E3A8A] mb-2">{{ lec.topic }}</h4>
+    <p class="text-gray-600 mb-4 font-medium">Date: {{ lec.date }}</p>
+
+    <div class="mb-4 space-x-6">
+      {% if lec.video %}
+      <a href="{{ lec.video.url }}" 
+         class="text-[#14B8A6] underline hover:text-[#0F766E] font-semibold transition-colors duration-300"
+      >
+        🎥 Watch Video
+      </a>
+      {% endif %}
+
+      {% if lec.pdf %}
+      <a href="{{ lec.pdf.url }}" 
+         class="text-[#1E3A8A] underline hover:text-[#0F766E] font-semibold transition-colors duration-300"
+      >
+        📄 View PDF
+      </a>
+      {% endif %}
+    </div>
+
+    <div class="flex flex-wrap gap-4">
+      <a href="{% url 'flashcards' lec.id %}" 
+         class="bg-[#14B8A6] text-white px-5 py-2 rounded-md font-semibold shadow hover:bg-[#0F766E] transition-colors duration-300"
+      >
+        🧠 Flashcards
+      </a>
+      <a href="{% url 'quiz' lec.id %}" 
+         class="bg-[#1E3A8A] text-white px-5 py-2 rounded-md font-semibold shadow hover:bg-[#0F766E] transition-colors duration-300"
+      >
+        📝 Quiz
+      </a>
+      <a href="{% url 'interview' lec.id %}" 
+         class="bg-[#0C4A6E] text-white px-5 py-2 rounded-md font-semibold shadow hover:bg-[#0F766E] transition-colors duration-300"
+      >
+        🎤 Interview
+      </a>
+    </div>
+  </li>
+  {% empty %}
+  <li class="text-[#14B8A6] font-semibold text-lg">No lectures uploaded yet.</li>
+  {% endfor %}
+</ul>
+
+{% endblock %}

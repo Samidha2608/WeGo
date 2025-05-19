@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8" />
+  <title>{% block title %}WeGo Student Platform{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body class="bg-[#F9FAFB] min-h-screen text-[#111827] font-sans">
+
+  <!-- Navbar -->
+  <nav class="bg-[#1E3A8A] shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
+      <h1 class="text-white text-3xl font-bold tracking-wide select-none cursor-default">WeGo</h1>
+      <div class="flex items-center space-x-6 text-base">
+        {% if user.is_authenticated %}
+          <form action="{% url 'logout' %}" method="post" class="inline">
+            {% csrf_token %}
+            <button 
+              type="submit" 
+              class="bg-[#14B8A6] hover:bg-[#0F766E] text-white font-semibold px-5 py-2 rounded-md transition-colors duration-300 shadow"
+            >
+              Logout
+            </button>
+          </form>
+        {% else %}
+          <a href="{% url 'login' %}" 
+             class="text-[#14B8A6] hover:text-[#0F766E] font-semibold transition-colors duration-300"
+          >
+            Login
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Content -->
+  <main class="max-w-7xl mx-auto px-6 py-12 min-h-[70vh]">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-[#1E3A8A] text-white text-center py-5 select-none">
+    <p class="text-sm font-semibold">&copy; {{ year|default:"2025" }} WeGo. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>

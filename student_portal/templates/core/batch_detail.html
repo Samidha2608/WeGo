@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 class="text-4xl font-extrabold text-[#1E3A8A] mb-8 tracking-tight leading-tight">Batch: {{ batch.name }}</h2>
+
+<div class="flex flex-col md:flex-row gap-10">
+
+  <!-- Sidebar: Students -->
+  <aside class="md:w-1/4 bg-white p-6 rounded-lg shadow-md text-gray-900">
+    <h3 class="text-2xl font-semibold mb-5 border-b border-gray-300 pb-3">Enrolled Students</h3>
+    <ul class="space-y-3 max-h-[400px] overflow-y-auto text-[#0F766E] font-medium text-lg list-none">
+      {% for student in students %}
+        <li class="hover:text-[#14B8A6] cursor-pointer transition-colors duration-200">{{ student.user.username }}</li>
+      {% empty %}
+        <li class="text-gray-500 italic">No students enrolled</li>
+      {% endfor %}
+    </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="md:w-3/4 bg-white p-10 rounded-lg shadow-md text-gray-900">
+    <h3 class="text-3xl font-semibold mb-8 border-b border-gray-300 pb-4">Add Lecture</h3>
+
+    <form method="post" enctype="multipart/form-data" class="space-y-8">
+      {% csrf_token %}
+      {{ form.as_p|safe }}
+      <button type="submit"
+        class="w-full bg-[#14B8A6] hover:bg-[#0F766E] hover:text-white transition-colors duration-300 py-4 rounded-lg font-extrabold text-white text-xl">
+        ➕ Add Lecture
+      </button>
+    </form>
+
+    <hr class="my-12 border-gray-300" />
+
+    <h3 class="text-3xl font-semibold mb-8 border-b border-gray-300 pb-4">Lectures</h3>
+
+    {% for lecture in lectures %}
+      <div class="mb-10 border border-gray-300 p-6 rounded-md bg-[#E6F4F1] shadow-sm">
+        <h4 class="text-2xl font-bold text-[#1E3A8A] mb-3 leading-snug">
+          {{ lecture.topic }}
+          <span class="text-[#0F766E] text-base font-semibold ml-2">({{ lecture.date }})</span>
+        </h4>
+
+        <div class="flex gap-4 mb-5 flex-wrap">
+          {% if lecture.video %}
+            <a href="{{ lecture.video.url }}" target="_blank"
+              class="bg-[#1E3A8A] hover:bg-[#0F766E] text-white px-6 py-2 rounded-md text-lg font-medium transition">
+              🎥 Watch Video
+            </a>
+          {% endif %}
+          {% if lecture.pdf %}
+            <a href="{{ lecture.pdf.url }}" target="_blank"
+              class="bg-[#0F766E] hover:bg-[#1E3A8A] text-white px-6 py-2 rounded-md text-lg font-medium transition">
+              📄 Download PDF
+            </a>
+          {% endif %}
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+          <!-- Flashcards -->
+          <div>
+            <details class="bg-white border rounded shadow-sm">
+              <summary class="cursor-pointer px-4 py-2 text-[#1E3A8A] font-semibold text-lg hover:text-[#0F766E] transition">
+                📇 Flashcards ({{ lecture.flashcards.count }})
+              </summary>
+              <div class="p-4 space-y-2 max-h-40 overflow-y-auto text-[#0F766E] text-base font-medium">
+                {% for card in lecture.flashcards.all %}
+                  <div title="{{ card.question }}">{{ card.question|truncatechars:40 }}</div>
+                {% empty %}
+                  <div class="italic text-gray-600">No flashcards</div>
+                {% endfor %}
+              </div>
+            </details>
+            <a href="{% url 'add_flashcard' lecture.id %}" class="inline-block mt-3 text-[#1E3A8A] hover:text-[#0F766E] font-semibold text-base transition">➕ Add Flashcard</a>
+          </div>
+
+          <!-- Quiz Questions -->
+          <div>
+            <details class="bg-white border rounded shadow-sm">
+              <summary class="cursor-pointer px-4 py-2 text-[#1E3A8A] font-semibold text-lg hover:text-[#0F766E] transition">
+                📝 Quiz Ques ({{ lecture.quiz_questions.count }})
+              </summary>
+              <div class="p-4 space-y-2 max-h-40 overflow-y-auto text-[#0F766E] text-base font-medium">
+                {% for quiz in lecture.quiz_questions.all %}
+                  <div title="{{ quiz.question }}">{{ quiz.question|truncatechars:40 }}</div>
+                {% empty %}
+                  <div class="italic text-gray-600">No quiz questions</div>
+                {% endfor %}
+              </div>
+            </details>
+            <a href="{% url 'add_quiz' lecture.id %}" class="inline-block mt-3 text-[#1E3A8A] hover:text-[#0F766E] font-semibold text-base transition">➕ Add Quiz Q</a>
+          </div>
+
+          <!-- Interview Questions -->
+          <div>
+            <details class="bg-white border rounded shadow-sm">
+              <summary class="cursor-pointer px-4 py-2 text-[#1E3A8A] font-semibold text-lg hover:text-[#0F766E] transition">
+                🎤 Interview Ques ({{ lecture.interview_questions.count }})
+              </summary>
+              <div class="p-4 space-y-2 max-h-40 overflow-y-auto text-[#0F766E] text-base font-medium">
+                {% for iq in lecture.interview_questions.all %}
+                  <div title="{{ iq.question }}">{{ iq.question|truncatechars:40 }}</div>
+                {% empty %}
+                  <div class="italic text-gray-600">No interview questions</div>
+                {% endfor %}
+              </div>
+            </details>
+            <a href="{% url 'add_interview_question' lecture.id %}" class="inline-block mt-3 text-[#1E3A8A] hover:text-[#0F766E] font-semibold text-base transition">➕ Add Interview Q</a>
+          </div>
+
+        </div>
+      </div>
+    {% empty %}
+      <p class="text-[#0F766E] font-semibold text-lg">No lectures added yet.</p>
+    {% endfor %}
+  </main>
+</div>
+
+{% endblock %}

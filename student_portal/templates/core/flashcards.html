@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Flashcards for {{ lecture.topic }}{% endblock %}
+
+{% block content %}
+<h2 class="text-2xl font-bold mb-4">Flashcards - {{ lecture.topic }}</h2>
+
+{% if flashcards %}
+  <ul class="space-y-4">
+    {% for card in flashcards %}
+      <li class="border p-4 rounded shadow">
+        <p><strong>Q:</strong> {{ card.question }}</p>
+        <p><strong>A:</strong> {{ card.answer }}</p>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No flashcards available for this lecture yet.</p>
+{% endif %}
+
+<a href="{% url 'dashboard' %}" class="mt-6 inline-block bg-blue-500 text-white px-4 py-2 rounded">Back to Dashboard</a>
+{% endblock %}

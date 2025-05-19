@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block title %}Quiz - {{ lecture.topic }}{% endblock %}
+
+{% block content %}
+<div class="flex flex-col md:flex-row gap-6">
+
+  <!-- Main Quiz Section -->
+  <div class="md:w-3/4 w-full">
+    <h2 class="text-2xl font-bold mb-4 text-green-700">Quiz: {{ lecture.topic }}</h2>
+
+    <!-- Timer -->
+    <div class="mb-4 text-lg font-semibold text-red-600">
+      Time Remaining: <span id="timer">--:--</span>
+    </div>
+
+    <!-- Status Tracker -->
+    <div class="mb-6 p-4 border rounded bg-gray-100">
+      <div class="flex flex-wrap gap-2 mb-2">
+        <div><strong>Total:</strong> <span id="total">{{ questions|length }}</span></div>
+        <div><strong>Done:</strong> <span id="done">0</span></div>
+        <div><strong>Skipped:</strong> <span id="skipped">{{ questions|length }}</span></div>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        {% for question in questions %}
+        <div id="qbox{{ forloop.counter }}"
+             class="w-8 h-8 text-sm flex items-center justify-center font-semibold border rounded bg-red-400 text-white">
+          {{ forloop.counter }}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Quiz Form -->
+    <form method="POST" id="quiz-form">
+      {% csrf_token %}
+      {% for question in questions %}
+      <div id="q{{ forloop.counter }}" class="mb-6 border border-gray-300 p-4 rounded shadow-sm bg-white">
+        <p class="mb-2 font-medium text-gray-800">
+          {{ forloop.counter }}. {{ question.question }}
+        </p>
+        <div class="space-y-1 text-gray-700">
+          <label><input type="radio" name="{{ question.id }}" value="1" onchange="markDone({{ forloop.counter }})"> {{ question.option1 }}</label><br>
+          <label><input type="radio" name="{{ question.id }}" value="2" onchange="markDone({{ forloop.counter }})"> {{ question.option2 }}</label><br>
+          {% if question.option3 %}
+          <label><input type="radio" name="{{ question.id }}" value="3" onchange="markDone({{ forloop.counter }})"> {{ question.option3 }}</label><br>
+          {% endif %}
+          {% if question.option4 %}
+          <label><input type="radio" name="{{ question.id }}" value="4" onchange="markDone({{ forloop.counter }})"> {{ question.option4 }}</label>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+
+      <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded">
+        Submit Quiz
+      </button>
+    </form>
+
+    <a href="{% url 'dashboard' %}" class="mt-6 inline-block text-blue-600 underline">Back to Dashboard</a>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script>
+  const totalQuestions = {{ questions|length }};
+  let answeredSet = new Set();
+
+  function markDone(qNo) {
+    answeredSet.add(qNo);
+    document.getElementById(`qbox${qNo}`).classList.remove("bg-red-400");
+    document.getElementById(`qbox${qNo}`).classList.add("bg-green-500");
+
+    // Update counts
+    document.getElementById("done").textContent = answeredSet.size;
+    document.getElementById("skipped").textContent = totalQuestions - answeredSet.size;
+  }
+
+  // Timer logic
+  let secondsLeft = totalQuestions * 45;
+  function updateTimer() {
+    const min = Math.floor(secondsLeft / 60);
+    const sec = secondsLeft % 60;
+    document.getElementById("timer").textContent =
+      String(min).padStart(2, '0') + ":" + String(sec).padStart(2, '0');
+
+    if (secondsLeft <= 0) {
+      document.getElementById("quiz-form").submit();
+    } else {
+      secondsLeft--;
+      setTimeout(updateTimer, 1000);
+    }
+  }
+  updateTimer();
+</script>
+{% endblock %}

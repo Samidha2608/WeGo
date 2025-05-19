@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md border border-gray-200">
+
+  <h2 class="text-3xl font-bold text-[#1E3A8A] mb-6 border-b border-gray-300 pb-2">
+    🎤 Add Interview Question
+  </h2>
+
+  <form method="post" class="space-y-6">
+    {% csrf_token %}
+
+    <!-- Question Field -->
+    <div>
+      <label for="id_question" class="block text-lg font-semibold text-[#1E3A8A] mb-2">
+        Question
+      </label>
+      <input type="text" name="question" id="id_question"
+        class="w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-[#14B8A6] focus:border-[#14B8A6] text-[#111827]"
+        value="{{ form.question.value|default_if_none:'' }}">
+      {% if form.question.errors %}
+        <p class="text-red-600 mt-1 text-sm">{{ form.question.errors.0 }}</p>
+      {% endif %}
+    </div>
+
+    <!-- Answer Field -->
+    <div>
+      <label for="id_answer" class="block text-lg font-semibold text-[#1E3A8A] mb-2">
+        Answer
+      </label>
+      <textarea name="answer" id="id_answer" rows="4"
+        class="w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-[#14B8A6] focus:border-[#14B8A6] text-[#111827]">{{ form.answer.value|default_if_none:'' }}</textarea>
+      {% if form.answer.errors %}
+        <p class="text-red-600 mt-1 text-sm">{{ form.answer.errors.0 }}</p>
+      {% endif %}
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit"
+      class="w-full bg-[#14B8A6] hover:bg-[#0F766E] text-white font-bold py-3 rounded-md transition duration-300 shadow">
+      💾 Save Question
+    </button>
+  </form>
+
+</div>
+{% endblock %}

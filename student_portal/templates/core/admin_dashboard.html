@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="max-w-7xl mx-auto px-6 py-10">
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+
+    <!-- Left column: Forms -->
+    <div class="space-y-12">
+
+      <!-- Create Batch -->
+      <section class="bg-white p-8 rounded-lg shadow-md">
+        <h2 class="text-3xl font-extrabold text-[#1E3A8A] mb-6">Create New Batch</h2>
+        <form method="post" class="space-y-6">
+          {% csrf_token %}
+          {{ batch_form.as_p|safe }}
+          <button type="submit" name="create_batch"
+            class="w-full bg-[#14B8A6] hover:bg-[#0F766E] text-white font-semibold py-3 rounded-md transition-colors duration-300"
+          >
+            Add Batch
+          </button>
+        </form>
+      </section>
+
+      <!-- Add Student -->
+      <section class="bg-white p-8 rounded-lg shadow-md">
+        <h2 class="text-3xl font-extrabold text-[#1E3A8A] mb-6">Add New Student</h2>
+        <form method="post" class="space-y-6">
+          {% csrf_token %}
+          {{ student_form.as_p|safe }}
+          <button type="submit" name="create_student"
+            class="w-full bg-[#14B8A6] hover:bg-[#0F766E] text-white font-semibold py-3 rounded-md transition-colors duration-300"
+          >
+            Add Student
+          </button>
+        </form>
+      </section>
+
+    </div>
+
+    <!-- Right column: Existing batches -->
+    <aside class="bg-white p-8 rounded-lg shadow-md">
+      <h3 class="text-3xl font-semibold text-[#1E3A8A] mb-8">Existing Batches</h3>
+      <ul class="space-y-4 text-gray-700">
+        {% for batch in batches %}
+          <li class="flex justify-between items-center border-b border-gray-300 pb-3">
+            <span class="font-semibold text-[#0F766E]">{{ batch.name }}</span>
+            <a href="{% url 'batch_detail' batch.id %}"
+               class="text-[#14B8A6] hover:text-[#0F766E] underline transition-colors duration-300"
+            >
+              View Details
+            </a>
+          </li>
+        {% empty %}
+          <li class="text-[#0F766E] font-semibold">No batches yet.</li>
+        {% endfor %}
+      </ul>
+
+      <a href="{% url 'register_student' %}"
+         class="inline-block mt-8 w-full text-center bg-[#14B8A6] text-white font-bold py-3 rounded-md hover:bg-[#0F766E] transition-colors duration-300"
+      >
+        Register New Student
+      </a>
+    </aside>
+
+  </div>
+
+</div>
+
+{% endblock %}

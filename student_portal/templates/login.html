@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-md border border-gray-200">
+
+  <h2 class="text-3xl font-bold text-[#1E3A8A] mb-6 text-center">Student Login</h2>
+
+  <form method="POST" class="space-y-6">
+      {% csrf_token %}
+
+      <div>
+          <label class="block mb-1 text-[#1E3A8A] font-semibold">Username</label>
+          <input type="text" name="username" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#14B8A6]" required>
+      </div>
+
+      <div>
+          <label class="block mb-1 text-[#1E3A8A] font-semibold">Password</label>
+          <input type="password" name="password" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#14B8A6]" required>
+      </div>
+
+      <button type="submit" class="w-full bg-[#14B8A6] hover:bg-[#0F766E] text-white font-semibold py-2 rounded-md transition duration-300">
+          🔐 Login
+      </button>
+  </form>
+
+  {% if form.errors %}
+    <p class="text-red-600 mt-4 text-center font-medium">❌ Invalid credentials. Please try again.</p>
+  {% endif %}
+</div>
+{% endblock %}

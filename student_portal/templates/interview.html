@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Interview Questions - {{ lecture.topic }}{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto mt-8 px-4">
+  <h2 class="text-3xl font-extrabold mb-6 text-blue-700">🎤 Interview Questions: {{ lecture.topic }}</h2>
+
+  {% if questions %}
+    <ol class="list-decimal space-y-6 pl-6">
+      {% for q in questions %}
+        <li class="bg-white border border-gray-300 p-5 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+          <p class="text-lg font-semibold text-gray-800">{{ q.question }}</p>
+        </li>
+      {% endfor %}
+    </ol>
+  {% else %}
+    <p class="text-center text-gray-500 italic">No interview questions available for this lecture.</p>
+  {% endif %}
+
+  <div class="mt-8 text-center">
+    <a href="{% url 'dashboard' %}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium px-5 py-2 rounded-lg transition-colors duration-300">
+      ⬅️ Back to Dashboard
+    </a>
+  </div>
+</div>
+{% endblock %}

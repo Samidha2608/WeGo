@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Interview Questions - {{ lecture.topic }}{% endblock %}
+
+{% block content %}
+<h2 class="text-2xl font-bold mb-4">🎤 Interview Questions: {{ lecture.topic }}</h2>
+
+{% if questions %}
+  <ol class="list-decimal space-y-4 pl-6">
+    {% for q in questions %}
+      <li class="bg-white border p-4 rounded shadow">
+        <strong>{{ q.question }}</strong>
+        <p class="text-sm text-gray-500 mt-2">Think about your answer or write it down for practice.</p>
+      </li>
+    {% endfor %}
+  </ol>
+{% else %}
+  <p class="text-gray-500">No interview questions available for this lecture.</p>
+{% endif %}
+
+<a href="{% url 'dashboard' %}" class="mt-6 inline-block text-blue-600 underline">⬅️ Back to Dashboard</a>
+{% endblock %}

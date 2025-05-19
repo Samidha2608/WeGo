@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Quiz Result - {{ lecture.topic }}{% endblock %}
+
+{% block content %}
+<div class="text-center mt-10">
+  <h2 class="text-3xl font-bold mb-4">Quiz Result: {{ lecture.topic }}</h2>
+
+  {% comment %} Pass/fail logic in JS because we can't do math easily in Django templates {% endcomment %}
+  <div id="result-message" class="text-2xl font-semibold mb-2"></div>
+  <div id="emoji-burst" class="text-5xl mt-4"></div>
+
+  <div class="mt-6 text-xl">
+    <p class="mb-2">Your Score: <strong>{{ score }}</strong> / {{ total }}</p>
+    <div class="bg-gray-200 w-1/2 mx-auto rounded-full h-4">
+      <div id="progress-bar" class="bg-green-500 h-4 rounded-full" style="width: 0;"></div>
+    </div>
+  </div>
+
+  <div class="mt-6">
+    <a href="{% url 'quiz' lecture.id %}" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded mr-4">Retake Quiz</a>
+    <a href="{% url 'dashboard' %}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Back to Dashboard</a>
+  </div>
+</div>
+
+<script>
+  (function() {
+    const score = {{ score }};
+    const total = {{ total }};
+    const percent = (score / total) * 100;
+    const resultMessage = document.getElementById('result-message');
+    const emojiBurst = document.getElementById('emoji-burst');
+    const progressBar = document.getElementById('progress-bar');
+
+    progressBar.style.width = percent + '%';
+
+    if (percent > 60) {
+      resultMessage.textContent = "🎉 Congratulations! You Passed! 🥳🎈";
+      resultMessage.classList.add('text-green-600');
+      emojiBurst.textContent = "🎊🎉✨💯🔥";
+      emojiBurst.classList.add('animate-bounce');
+    } else {
+      resultMessage.textContent = "😞 You Failed. Better luck next time! 💔";
+      resultMessage.classList.add('text-red-600');
+      emojiBurst.textContent = "💔😔😭👎";
+      emojiBurst.classList.add('animate-pulse');
+    }
+  })();
+</script>
+{% endblock %}
